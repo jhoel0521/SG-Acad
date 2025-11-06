@@ -51,14 +51,14 @@
         </div>
 
         <!-- Carrera (para estudiante) -->
-        <div class="mt-4 estudiante-field" style="display: none;">
+        <div class="mt-4 estudiante-field">
             <x-input-label for="carrera" :value="__('Carrera')" />
             <x-text-input id="carrera" class="block mt-1 w-full" type="text" name="carrera" :value="old('carrera')" />
             <x-input-error :messages="$errors->get('carrera')" class="mt-2" />
         </div>
 
         <!-- Departamento (para docente) -->
-        <div class="mt-4 docente-field" style="display: none;">
+        <div class="mt-4 docente-field">
             <x-input-label for="departamento" :value="__('Departamento')" />
             <x-text-input id="departamento" class="block mt-1 w-full" type="text" name="departamento" :value="old('departamento')" />
             <x-input-error :messages="$errors->get('departamento')" class="mt-2" />
@@ -82,6 +82,20 @@
     @endif
 
     <script>
+        // Ocultar inicialmente
+        document.querySelector('.estudiante-field').style.display = 'none';
+        document.querySelector('.docente-field').style.display = 'none';
+
+        // Mostrar si hay valor old
+        const oldRol = '{{ old("rol") }}';
+        if (oldRol === 'estudiante') {
+            document.querySelector('.estudiante-field').style.display = 'block';
+            document.getElementById('carrera').required = true;
+        } else if (oldRol === 'docente') {
+            document.querySelector('.docente-field').style.display = 'block';
+            document.getElementById('departamento').required = true;
+        }
+
         document.getElementById('rol').addEventListener('change', function() {
             const rol = this.value;
             document.querySelector('.estudiante-field').style.display = rol === 'estudiante' ? 'block' : 'none';
