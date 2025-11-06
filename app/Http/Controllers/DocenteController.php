@@ -100,14 +100,28 @@ class DocenteController extends Controller
         $calificaciones = $request->calificaciones; // array de inscripcion_id => ['valor' => , 'descripcion' => ]
 
         foreach ($calificaciones as $inscripcionId => $data) {
-            if (!empty($data['valor'])) {
-                Calificacion::updateOrCreate(
-                    ['inscripcion_id' => $inscripcionId, 'descripcion' => $data['descripcion'] ?? ''],
-                    ['valor_calificacion' => $data['valor']]
-                );
+            if (!empty($data['valor']) && !empty($data['descripcion'])) {
+                Calificacion::create([
+                    'inscripcion_id' => $inscripcionId,
+                    'descripcion' => $data['descripcion'],
+                    'valor_calificacion' => $data['valor']
+                ]);
             }
         }
 
         return back()->with('success', 'Calificaciones guardadas exitosamente.');
+    }
+
+    public function eliminarCalificacion(Calificacion $calificacion)
+    {
+        $materia = $calificacion->inscripcion->materia;
+        
+        if ($materia->docente_id !== Auth::user()->perfilDocente->id) {
+            abort(403);
+        }
+
+        $calificacion->delete();
+
+        return back()->with('success', 'Calificación eliminada exitosamente.');
     }
 }

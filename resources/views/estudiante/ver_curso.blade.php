@@ -39,6 +39,9 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="mt-4 p-4 bg-blue-100 rounded">
+                            <p class="text-lg font-bold">Nota Final (Promedio): {{ number_format($calificaciones->avg('valor_calificacion'), 2) }}</p>
+                        </div>
                     @endif
                 </div>
             </div>

@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/materias/{materia}/asistencia', [\App\Http\Controllers\DocenteController::class, 'guardarAsistencia'])->name('guardar_asistencia');
         Route::get('/materias/{materia}/calificaciones', [\App\Http\Controllers\DocenteController::class, 'calificaciones'])->name('calificaciones');
         Route::post('/materias/{materia}/calificaciones', [\App\Http\Controllers\DocenteController::class, 'guardarCalificaciones'])->name('guardar_calificaciones');
+        Route::delete('/calificaciones/{calificacion}', [\App\Http\Controllers\DocenteController::class, 'eliminarCalificacion'])->name('eliminar_calificacion');
     });
 
     Route::prefix('estudiante')->name('estudiante.')->middleware('role:estudiante')->group(function () {
