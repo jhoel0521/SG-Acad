@@ -17,6 +17,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('materias', \App\Http\Controllers\MateriaController::class);
+
+    Route::prefix('docente')->name('docente.')->middleware('role:docente')->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\DocenteController::class, 'dashboard'])->name('dashboard');
+        Route::get('/materias/{materia}/estudiantes', [\App\Http\Controllers\DocenteController::class, 'estudiantes'])->name('estudiantes');
+        Route::get('/materias/{materia}/asistencia', [\App\Http\Controllers\DocenteController::class, 'tomarAsistencia'])->name('asistencia');
+        Route::post('/materias/{materia}/asistencia', [\App\Http\Controllers\DocenteController::class, 'guardarAsistencia'])->name('guardar_asistencia');
+        Route::get('/materias/{materia}/calificaciones', [\App\Http\Controllers\DocenteController::class, 'calificaciones'])->name('calificaciones');
+        Route::post('/materias/{materia}/calificaciones', [\App\Http\Controllers\DocenteController::class, 'guardarCalificaciones'])->name('guardar_calificaciones');
+    });
 });
 
 require __DIR__.'/auth.php';
