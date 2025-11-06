@@ -13,6 +13,8 @@
                         <a href="{{ route('materias.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 inline-block">
                             Crear Nueva Materia
                         </a>
+                    @else
+                        <p class="text-gray-600 mb-4">Solo los docentes pueden crear nuevas materias.</p>
                     @endif
 
                     <table class="min-w-full bg-white">
