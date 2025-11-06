@@ -34,8 +34,8 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'rol' => ['required', 'in:estudiante,docente'],
-            'carrera' => ['required_if:rol,estudiante', 'string', 'max:255'],
-            'departamento' => ['required_if:rol,docente', 'string', 'max:255'],
+            'carrera' => ['nullable', 'required_if:rol,estudiante', 'string', 'max:255'],
+            'departamento' => ['nullable', 'required_if:rol,docente', 'string', 'max:255'],
         ]);
 
         try {
@@ -58,7 +58,7 @@ class RegisteredUserController extends Controller
             Auth::login($user);
 
             return redirect(route('dashboard', absolute: false));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return back()->withErrors(['error' => 'Error al registrar: ' . $e->getMessage()])->withInput();
         }
     }
