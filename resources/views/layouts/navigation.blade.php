@@ -20,6 +20,11 @@
                             {{ __('Panel Docente') }}
                         </x-nav-link>
                     @endif
+                    @if(Auth::user()->hasRole('estudiante'))
+                        <x-nav-link :href="route('estudiante.dashboard')" :active="request()->routeIs('estudiante.*')">
+                            {{ __('Mis Cursos') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
