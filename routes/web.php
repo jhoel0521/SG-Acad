@@ -17,6 +17,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('materias', \App\Http\Controllers\MateriaController::class);
+    Route::post('materias/{materia}/inscribir', [\App\Http\Controllers\MateriaController::class, 'inscribir'])->name('materias.inscribir');
+    Route::delete('materias/{materia}/desinscribir', [\App\Http\Controllers\MateriaController::class, 'desinscribir'])->name('materias.desinscribir');
 
     Route::prefix('docente')->name('docente.')->middleware('role:docente')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\DocenteController::class, 'dashboard'])->name('dashboard');

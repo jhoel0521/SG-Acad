@@ -18,8 +18,14 @@ class MateriaController extends Controller
         $this->authorize('viewAny', Materia::class);
 
         $materias = Materia::with('docente.usuario')->get();
+        
+        // Si es estudiante, obtener sus inscripciones
+        $inscripciones = [];
+        if (Auth::user()->hasRole('estudiante')) {
+            $inscripciones = Auth::user()->perfilEstudiante->inscripciones()->pluck('materia_id')->toArray();
+        }
 
-        return view('materias.index', compact('materias'));
+        return view('materias.index', compact('materias', 'inscripciones'));
     }
 
     /**
@@ -100,5 +106,52 @@ class MateriaController extends Controller
         $materia->delete();
 
         return redirect()->route('materias.index')->with('success', 'Materia eliminada exitosamente.');
+    }
+
+    /**
+     * Inscribir estudiante en una materia.
+     */
+    public function inscribir(Materia $materia)
+    {
+        if (!Auth::user()->hasRole('estudiante')) {
+            abort(403, 'Solo estudiantes pueden inscribirse.');
+        }
+
+        $estudiante = Auth::user()->perfilEstudiante;
+
+        // Verificar si ya está inscrito
+        $yaInscrito = $estudiante->inscripciones()->where('materia_id', $materia->id)->exists();
+
+        if ($yaInscrito) {
+            return back()->withErrors(['error' => 'Ya estás inscrito en esta materia.']);
+        }
+
+        $estudiante->inscripciones()->create([
+            'materia_id' => $materia->id,
+            'estado' => 'cursando',
+        ]);
+
+        return back()->with('success', 'Te has inscrito exitosamente.');
+    }
+
+    /**
+     * Desinscribir estudiante de una materia.
+     */
+    public function desinscribir(Materia $materia)
+    {
+        if (!Auth::user()->hasRole('estudiante')) {
+            abort(403, 'Solo estudiantes pueden desinscribirse.');
+        }
+
+        $estudiante = Auth::user()->perfilEstudiante;
+        $inscripcion = $estudiante->inscripciones()->where('materia_id', $materia->id)->first();
+
+        if (!$inscripcion) {
+            return back()->withErrors(['error' => 'No estás inscrito en esta materia.']);
+        }
+
+        $inscripcion->delete();
+
+        return back()->with('success', 'Te has desinscrito exitosamente.');
     }
 }

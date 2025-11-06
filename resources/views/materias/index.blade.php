@@ -42,6 +42,20 @@
                                                 <button type="submit" class="text-red-600 hover:text-red-900 ml-2" onclick="return confirm('¿Estás seguro?')">Eliminar</button>
                                             </form>
                                         @endif
+                                        @if(auth()->user()->hasRole('estudiante'))
+                                            @if(in_array($materia->id, $inscripciones))
+                                                <form action="{{ route('materias.desinscribir', $materia) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900 ml-2">Desinscribirme</button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('materias.inscribir', $materia) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    <button type="submit" class="text-green-600 hover:text-green-900 ml-2">Inscribirme</button>
+                                                </form>
+                                            @endif
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
