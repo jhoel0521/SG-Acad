@@ -38,24 +38,28 @@ class RegisteredUserController extends Controller
             'departamento' => ['required_if:rol,docente', 'string', 'max:255'],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        $user->assignRole($request->rol);
+            $user->assignRole($request->rol);
 
-        if ($request->rol === 'estudiante') {
-            $user->perfilEstudiante()->create(['carrera' => $request->carrera]);
-        } elseif ($request->rol === 'docente') {
-            $user->perfilDocente()->create(['departamento' => $request->departamento]);
+            if ($request->rol === 'estudiante') {
+                $user->perfilEstudiante()->create(['carrera' => $request->carrera]);
+            } elseif ($request->rol === 'docente') {
+                $user->perfilDocente()->create(['departamento' => $request->departamento]);
+            }
+
+            event(new Registered($user));
+
+            Auth::login($user);
+
+            return redirect(route('dashboard', absolute: false));
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Error al registrar: ' . $e->getMessage()])->withInput();
         }
-
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
     }
 }

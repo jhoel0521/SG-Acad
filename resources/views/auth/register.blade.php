@@ -75,6 +75,12 @@
         </div>
     </form>
 
+    @if($errors->has('error'))
+        <div class="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            {{ $errors->first('error') }}
+        </div>
+    @endif
+
     <script>
         document.getElementById('rol').addEventListener('change', function() {
             const rol = this.value;
