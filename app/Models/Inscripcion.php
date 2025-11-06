@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Inscripcion extends Model
 {
+    protected $table = 'inscripciones';
     protected $fillable = ['estudiante_id', 'materia_id', 'estado'];
 
     public function estudiante(): BelongsTo

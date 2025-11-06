@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Asistencia extends Model
 {
+    protected $table = 'asistencias';
     protected $fillable = ['inscripcion_id', 'fecha', 'estado'];
 
     public function inscripcion(): BelongsTo
